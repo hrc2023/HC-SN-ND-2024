@@ -41,17 +41,31 @@ const Profile = () => {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("authToken");
-      await axios.put(
+      if (!token) {
+        alert("You must log in to update your profile.");
+        return;
+      }
+  
+      const response = await axios.put(
         "http://localhost:5000/api/users/me",
         { name, email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+  
       alert("Profile updated successfully!");
+      console.log("Updated profile:", response.data);
     } catch (error) {
-      console.error("Failed to update profile:", error);
-      alert("Failed to update profile. Please try again.");
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message || "Failed to update profile. Please try again.");
+      } else if (error instanceof Error) {
+        console.error("Unexpected error:", error.message);
+        alert("Unexpected error occurred. Please try again.");
+      } else {
+        console.error("Unknown error:", error);
+        alert("An unknown error occurred. Please try again.");
+      }
     }
-  };
+  };  
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
