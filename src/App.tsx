@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { checkHealth } from './services/api';
-import logo from './logo.svg';
-import './App.css';
 import { AxiosResponse } from 'axios';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
