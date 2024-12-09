@@ -1,24 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { checkHealth } from './services/api';
 import logo from './logo.svg';
 import './App.css';
+import { AxiosResponse } from 'axios';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Profile from "./pages/Profile";
 
 function App() {
+  useEffect(() => {
+    checkHealth()
+        .then((response: AxiosResponse<{ message: string }>) => {
+            console.log(response.data.message);
+        })
+        .catch((error: any) => {
+            console.error('Error:', error);
+        });
+}, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<div>404 - Page Not Found</div>} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
     </div>
   );
 }
